@@ -1,0 +1,42 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+  telegraf:
+    image: telegraf:1.20
+    ports:
+      - "9273:9273"
+    links:
+      - app
+      - influxdb
+    volumes:
+      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+  influxdb:
+    image: bitnami/influxdb:1
+    hostname: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=app_metrics
+      - INFLUXDB_ADMIN_USER_PASSWORD=secret
+      - INFLUXDB_ADMIN_USER_TOKEN=admin
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana:8.2.2
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./config/grafana/:/etc/grafana/provisioning
+volumes:
+  influxdb-storage:
+  grafana-storage:
