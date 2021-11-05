@@ -22,7 +22,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -103,6 +102,8 @@
       "targets": [
         {
           "alias": "p$col",
+          "exemplar": true,
+          "expr": "randomTimer_seconds",
           "groupBy": [
             {
               "params": [
@@ -117,6 +118,8 @@
               "type": "fill"
             }
           ],
+          "interval": "",
+          "legendFormat": "{{ instance }}: {{ quantile }}",
           "measurement": "app_randomTimer_seconds",
           "orderByTime": "ASC",
           "policy": "default",
@@ -231,7 +234,7 @@
         "y": 0
       },
       "id": 6,
-      "interval": "5s",
+      "interval": "1m",
       "options": {
         "legend": {
           "calcs": [],
@@ -245,6 +248,8 @@
       "targets": [
         {
           "alias": "executions",
+          "exemplar": true,
+          "expr": "rate(randomTimer_seconds_count[$__interval])",
           "groupBy": [
             {
               "params": [
@@ -259,6 +264,9 @@
               "type": "fill"
             }
           ],
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{ instance }}",
           "measurement": "app_randomTimer_seconds",
           "orderByTime": "ASC",
           "policy": "default",
@@ -287,7 +295,7 @@
           "tags": []
         }
       ],
-      "title": "randomTimer: executions",
+      "title": "randomTimer: executions 1/s",
       "type": "timeseries"
     },
     {
@@ -349,6 +357,7 @@
         "y": 9
       },
       "id": 5,
+      "interval": "15s",
       "options": {
         "legend": {
           "calcs": [],
@@ -362,6 +371,8 @@
       "targets": [
         {
           "alias": "added",
+          "exemplar": true,
+          "expr": "rate(randomCount_total[$__interval])",
           "groupBy": [
             {
               "params": [
@@ -376,6 +387,8 @@
               "type": "fill"
             }
           ],
+          "interval": "",
+          "legendFormat": "",
           "measurement": "app_randomCount_total",
           "orderByTime": "ASC",
           "policy": "default",
@@ -404,7 +417,9 @@
           "tags": []
         }
       ],
+      "timeFrom": null,
       "title": "randomCount",
+      "transformations": [],
       "type": "timeseries"
     },
     {
@@ -479,6 +494,8 @@
       "targets": [
         {
           "alias": "$tag_type",
+          "exemplar": true,
+          "expr": "randomGauge",
           "groupBy": [
             {
               "params": [
@@ -499,6 +516,8 @@
               "type": "fill"
             }
           ],
+          "interval": "",
+          "legendFormat": "{{ instance }}: {{ type }}",
           "measurement": "app_randomGauge",
           "orderByTime": "ASC",
           "policy": "default",
@@ -540,5 +559,5 @@
   "timezone": "",
   "title": "app",
   "uid": "St86SMK7z",
-  "version": 2
+  "version": 1
 }

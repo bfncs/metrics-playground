@@ -1,42 +1,30 @@
 version: "3.9"
 services:
-  app:
+  app1:
     build: .
     ports:
       - "8080:8080"
-  telegraf:
-    image: telegraf:1.20
+  app2:
+    build: .
     ports:
-      - "9273:9273"
+      - "8081:8080"
+  prometheus:
+    image: prom/prometheus:v2.31.0
+    ports:
+      - "9090:9090"
     links:
-      - app
-      - influxdb
+      - app1
+      - app2
     volumes:
-      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    depends_on:
-      - influxdb
-  influxdb:
-    image: bitnami/influxdb:1
-    hostname: influxdb
-    ports:
-      - "8086:8086"
-    environment:
-      - INFLUXDB_DB=app_metrics
-      - INFLUXDB_ADMIN_USER_PASSWORD=secret
-      - INFLUXDB_ADMIN_USER_TOKEN=admin
-    volumes:
-      - influxdb-storage:/var/lib/influxdb
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
   grafana:
     image: grafana/grafana:8.2.2
     ports:
       - "3000:3000"
-    depends_on:
-      - influxdb
     links:
-      - influxdb
+      - prometheus
     volumes:
       - grafana-storage:/var/lib/grafana
-      - ./config/grafana/:/etc/grafana/provisioning
+      - ./config/grafana/:/etc/grafana/provisioning:ro
 volumes:
-  influxdb-storage:
   grafana-storage:
